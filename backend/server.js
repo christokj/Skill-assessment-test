@@ -24,6 +24,9 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
+const db = require('./config/db');
+
+
 app.get("/", (req, res) => {
     res.send("Hello World!");
 });
