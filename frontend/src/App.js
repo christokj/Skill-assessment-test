@@ -1,11 +1,16 @@
 import React from 'react';
 import UserList from './components/UserList';
 import AddUser from './components/AddUser';
+import { Toaster } from "react-hot-toast";
+import { router } from './routes/Routes';
 const App = () => (
-    <div>
+    <>
         <h1>User Management</h1>
         <AddUser />
         <UserList />
-    </div>
+        <RouterProvider router={router} />
+        <Toaster />
+    </>
 );
+
 export default App;

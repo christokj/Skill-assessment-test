@@ -10,14 +10,10 @@ logs
 frontend/node_modules
 backend/node_modules
 
-# temp
-backend/routes
-backend/controllers
-frontend/redux
-frontend/components
-
 # Environment files
 .env
+frontend/env
+backend/env
 
 # Build
 frontend/build/
