@@ -21,8 +21,7 @@ const detailTableSchema = Joi.object({
 
 const itemMasterSchema = Joi.object({
     item_code: Joi.string().max(20).required(),
-    item_name: Joi.string().max(200).required(),
-    description: Joi.string().max(3000).required()
+    item_name: Joi.string().max(200).required()
 });
 
 module.exports = {

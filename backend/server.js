@@ -1,10 +1,12 @@
 const express = require('express');
 const cors = require('cors');
+
+require('dotenv').config();
+
 const apiRouter = require('./routes');
 
 const app = express();
 
-require('dotenv').config();
 
 const corsOptions = {
     origin: process.env.CLIENT_DOMAIN,
@@ -23,9 +25,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(express.json());
-
-const db = require('./config/db');
-
 
 app.get("/", (req, res) => {
     res.send("Hello World!");
