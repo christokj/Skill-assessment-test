@@ -1,0 +1,44 @@
+.table-container {
+    margin: 20px;
+    overflow-x: auto; 
+    width: 75%;
+  }
+  
+  .details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 16px;
+    text-align: left;
+  }
+  
+  .details-table thead tr {
+    background-color: #f4f4f4;
+    color: #333;
+    border-bottom: 2px solid #ccc;
+  }
+  
+  .details-table th,
+  .details-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+  }
+  
+  .details-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .details-table tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+  }
+  
+  .details-table tbody tr td:last-child {
+    text-align: right; /* Align the Amount column to the right */
+  }
+  
+  .details-table tbody tr td:nth-child(4),
+  .details-table tbody tr td:nth-child(5) {
+    text-align: center; /* Align Qty and Rate columns to the center */
+  }
+  

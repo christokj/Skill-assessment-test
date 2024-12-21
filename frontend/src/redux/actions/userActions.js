@@ -1,4 +1,4 @@
-export const setUsers = (users) => ({
-    type: 'SET_USERS',
-    payload: users
+export const setData = (data) => ({
+    type: 'SET_DATA',
+    payload: data
 });
