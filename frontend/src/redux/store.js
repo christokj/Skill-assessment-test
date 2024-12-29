@@ -1,10 +1,22 @@
 import { configureStore } from '@reduxjs/toolkit';
-import dataReducer from './reducers/userReducer';
+import authReducer from './features/authSlice';
 
-// Redux store instance
-const store = configureStore({
+export const store = configureStore({
     reducer: {
-        auth: dataReducer,
+        auth: authReducer,
     },
 });
+
 export default store;
+
+export const triggerAction = () => {
+    return {
+        type: 'TRIGGER_ACTION',
+    };
+};
+
+export const printAction = () => {
+    return {
+        type: 'TRIGGER_ACTION',
+    };
+};

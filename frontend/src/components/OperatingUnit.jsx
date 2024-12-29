@@ -1,9 +1,28 @@
 import React from 'react';
 import './OperatingUnit.css'; 
+import { useDispatch, useSelector } from 'react-redux';
+import { clearDetailData, InsertClick, setPrintAction } from '../redux/features/authSlice';
 function OperatingUnit() {
 
+  const dispatch = useDispatch();
+
     const handleClick = (action) => {
-      alert(`You clicked ${action}`);
+      if (action === 'New'){
+        dispatch(clearDetailData());   // Clear Redux state and UI
+      }
+      if (action === 'Insert') {
+        dispatch(InsertClick());
+      }
+      if (action === 'Save') {
+        // Handle Save action
+        // ...
+      }
+      // if (action === 'Print') {
+      //   dispatch(setPrintAction(true));
+      // }
+    };
+    const triggerPrint = () => {
+      dispatch(setPrintAction(true));
     };
 
   return (
@@ -11,7 +30,7 @@ function OperatingUnit() {
       <button className="action-button" onClick={() => handleClick('New')}>New</button>
       <button className="action-button" onClick={() => handleClick('Insert')}>Insert</button>
       <button className="action-button" onClick={() => handleClick('Save')}>Save</button>
-      <button className="action-button" onClick={() => handleClick('Print')}>Print</button>
+      <button className="action-button" onClick={triggerPrint}>Print</button>
     </div>
   )
 }
