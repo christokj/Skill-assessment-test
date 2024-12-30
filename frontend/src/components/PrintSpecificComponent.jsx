@@ -4,17 +4,17 @@ import { setPrintAction } from '../redux/features/authSlice';
 import './Header.css';
 
 // Component to Render Printable Content
-const PrintableComponent = React.forwardRef(({ data, vrNo, formattedDate }, ref) => (
-  <div ref={ref}>
+const PrintableComponent = React.forwardRef(({ data, formattedDate }, ref) => (
+  <div ref={ref} style={{visibility: 'hidden', marginTop: '300px'}}> 
     {/* Header Section */}
-    <section className="header-container">
+    <section className="header-container" >
       <div className="header-item">
         Vr NO: 
-        <input 
-          type="text" 
+        <input  
+          type="text"  
           value={data[0]?.vr_no} 
           name="vr_no" 
-        />
+        />  
       </div>
     </section> 
 
@@ -102,27 +102,29 @@ function PrintSpecificComponent() {
 
   const handlePrint = () => {
     if (componentRef.current) {
+      componentRef.current.style.visibility = 'visible'; // Ensure the print component is visible
       // Create a hidden iframe
       const iframe = document.createElement('iframe');
       iframe.style.position = 'absolute';
       iframe.style.top = '-1000px';
-      iframe.style.left = '-1000px';
-
-      document.body.appendChild(iframe);
-
+      iframe.style.left = '-1000px'; 
+   
+      document.body.appendChild(iframe); 
+  
       // Write the content to the iframe
       const doc = iframe.contentDocument || iframe.contentWindow.document;
       doc.open();
       doc.write('<html><head><title>Print</title></head><body>');
       doc.write(componentRef.current.outerHTML);
-      doc.write('</body></html>');
+      doc.write('</body></html>'); 
       doc.close();
-
+  
       // Print the content and cleanup
       iframe.contentWindow.focus();
       iframe.contentWindow.print();
-
+  
       setTimeout(() => {
+      componentRef.current.style.visibility = 'hidden'; 
         document.body.removeChild(iframe); // Remove iframe after printing
         dispatch(setPrintAction(false)); // Reset Redux state
       }, 1000);
@@ -130,6 +132,7 @@ function PrintSpecificComponent() {
       console.error('Component reference is not available.');
     }
   };
+  
 
   useEffect(() => {
     if (printAction) {
@@ -146,7 +149,7 @@ function PrintSpecificComponent() {
   return (
     <div>
       {/* Render the Printable Component */}
-      <PrintableComponent ref={componentRef} data={data} formattedDate={formattedDate} />
+      <PrintableComponent  ref={componentRef} data={data} formattedDate={formattedDate} />
     </div>
   );
 }

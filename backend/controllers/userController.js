@@ -40,53 +40,46 @@ exports.getAllItems = async (req, res) => {
     }
 };
 
-// Create a new item in item_master
-exports.createItem = async (req, res) => {
-    const { item_code, item_name } = req.body;
-    const query = `INSERT INTO item_master (item_code, item_name) VALUES (?, ?)`;
-    db.query(query, [item_code, item_name], (err, results) => {
-        if (err) {
-            console.error("Error inserting data into item_master:", err);
-            return res.status(500).json({ error: "Failed to create item" });
-        }
-        res.status(201).json({
-            success: true,
-            message: "Item created successfully",
-            itemId: results.insertId,
-        });
-    });
-};
+// Save all data in one call using transactions
+exports.saveAllData = async (req, res) => {
+    try {
+        const { header_table, detail_table, item_master } = req.body;
 
-// Insert data into header_table
-exports.insertHeaderTable = async (req, res) => {
-    const { vr_no, vr_date, ac_name, ac_amt, status } = req.body;
-    const query = `INSERT INTO header_table (vr_no, vr_date, ac_name, ac_amt, status) VALUES (?, ?, ?, ?, ?)`;
-    db.query(query, [vr_no, vr_date, ac_name, ac_amt, status], (err, results) => {
-        if (err) {
-            console.error("Error inserting data into header_table:", err);
-            return res.status(500).json({ error: "Failed to insert data into header_table" });
-        }
-        res.status(201).json({
-            success: true,
-            message: "Data inserted successfully into header_table",
-            insertId: results.insertId,
-        });
-    });
-};
+        // Perform database operations here
+        // Insert into header_table
+        const headerInsertQuery = `INSERT INTO header_table (vr_no, vr_date, ac_name, ac_amt, status) VALUES (?, ?, ?, ?, ?)`;
+        await db.promise().query(headerInsertQuery, [
+            header_table.vr_no,
+            header_table.vr_date,
+            header_table.ac_name,
+            header_table.ac_amt,
+            header_table.status,
+        ]);
 
-// Insert data into detail_table
-exports.insertDetailTable = async (req, res) => {
-    const { vr_no, sr_no, item_code, item_name, description, qty, rate } = req.body;
-    const query = `INSERT INTO detail_table (vr_no, sr_no, item_code, item_name, description, qty, rate) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    db.query(query, [vr_no, sr_no, item_code, item_name, description, qty, rate], (err, results) => {
-        if (err) {
-            console.error("Error inserting data into detail_table:", err);
-            return res.status(500).json({ error: "Failed to insert data into detail_table" });
+        // Insert into detail_table
+        const detailInsertQuery = `INSERT INTO detail_table (vr_no, sr_no, item_code, item_name, description, qty, rate) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        const detailInsertPromises = detail_table.map((detail) =>
+            db.promise().query(detailInsertQuery, [
+                detail.vr_no,
+                detail.sr_no,
+                detail.item_code,
+                detail.item_name,
+                detail.description,
+                detail.qty,
+                detail.rate,
+            ])
+        );
+        await Promise.all(detailInsertPromises);
+
+        // Insert into item_master if provided
+        if (item_master) {
+            const itemInsertQuery = `INSERT INTO item_master (item_code, item_name) VALUES (?, ?)`;
+            await db.promise().query(itemInsertQuery, [item_master.item_code, item_master.item_name]);
         }
-        res.status(201).json({
-            success: true,
-            message: "Data inserted successfully into detail_table",
-            insertId: results.insertId,
-        });
-    });
+
+        res.status(201).json({ success: true, message: "Data saved successfully" });
+    } catch (err) {
+        console.error("Error saving data:", err);
+        res.status(500).json({ error: "An error occurred while saving data" });
+    }
 };

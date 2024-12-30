@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Header.css';
 import { axiosInstance } from '../config/axiosInstance';
-import { setDetailData } from '../redux/features/authSlice';
+import { setDetailData, setSaveClick } from '../redux/features/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 function Header() {
-
+  
+      const printAction = useSelector((state) => state.auth.printAction);
   const data = useSelector((state) => state.auth.detailData) || []// Access data from Redux state
   const [vrNo, setVrNo] = useState('');
   const dispatch = useDispatch();
-console.log(data )
   const handleVrNoChange = (event) => {
     
     setVrNo(event.target.value);
@@ -65,6 +65,44 @@ console.log(data )
       console.error('Error fetching data:', error);
     }
   };
+
+    const saveClick = useSelector((state) => state.auth.saveClick);
+  
+  useEffect(() => {
+    if (saveClick) {
+
+      const existingData = data.length > 0 ? data[0] : {};
+  
+    // Dispatch the updated data to Redux
+    dispatch(setDetailData([{ ...existingData, vr_no: vrNo }]));
+      // Function to save data
+      const saveData = async () => {
+        const header_table = data
+        const detail_table = data
+        const item_master = data
+        try {
+          const response = await axiosInstance.post('user/all_data', { header_table, detail_table, item_master });
+          if (response.status === 200) {
+            console.log('Data saved successfully:', response.data);
+
+          } else {
+            console.error('Failed to save data:', response);
+          }
+          dispatch(setSaveClick(false));
+        } catch (error) {
+          console.error('Error while saving data:', error);
+          dispatch(setSaveClick(false));
+
+        }
+      };
+
+      saveData(); // Call the save function
+      
+    } 
+            dispatch(setSaveClick(false));
+    
+  }, [saveClick])
+  
   
  const formattedDate = new Date(data[0]?.vr_date).toLocaleDateString('en-GB', {
     year: 'numeric',
@@ -73,7 +111,7 @@ console.log(data )
   }) 
 
   return (
-    <>
+    <div style={printAction ? {visibility: 'hidden'} : {}}>
       <section className="header-container">
         <div className="header-item">
           Vr NO: 
@@ -129,7 +167,7 @@ console.log(data )
             />
           </div>
         </div>
-    </>
+    </div>
   );
 }
 

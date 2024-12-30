@@ -1,9 +1,10 @@
 import React from 'react';
 import './OperatingUnit.css'; 
 import { useDispatch, useSelector } from 'react-redux';
-import { clearDetailData, InsertClick, setPrintAction } from '../redux/features/authSlice';
+import { clearDetailData, InsertClick, setPrintAction, setSaveClick } from '../redux/features/authSlice';
 function OperatingUnit() {
-
+    const printAction = useSelector((state) => state.auth.printAction);
+    
   const dispatch = useDispatch();
 
     const handleClick = (action) => {
@@ -14,8 +15,8 @@ function OperatingUnit() {
         dispatch(InsertClick());
       }
       if (action === 'Save') {
-        // Handle Save action
-        // ...
+        dispatch(setSaveClick(true));
+
       }
       // if (action === 'Print') {
       //   dispatch(setPrintAction(true));
@@ -26,7 +27,7 @@ function OperatingUnit() {
     };
 
   return (
-    <div className="buttons-container">
+    <div className="buttons-container" style={printAction ? {visibility: 'hidden'} : {}}>
       <button className="action-button" onClick={() => handleClick('New')}>New</button>
       <button className="action-button" onClick={() => handleClick('Insert')}>Insert</button>
       <button className="action-button" onClick={() => handleClick('Save')}>Save</button>

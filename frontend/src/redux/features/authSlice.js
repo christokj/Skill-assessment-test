@@ -3,7 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     data: [], // Initial state
     message: '',
-    printAction: false
+    printAction: false,
+    saveClick: false
 };
 
 const authSlice = createSlice({
@@ -25,9 +26,12 @@ const authSlice = createSlice({
         setPrintAction(state, action) {
             state.printAction = action.payload;
         },
+        setSaveClick(state, action) {
+            state.saveClick = action.payload;
+        }
     }
 });
 
-export const { setDetailData, clearDetailData, InsertClick, UpdateClick, setPrintAction } = authSlice.actions;
+export const { setDetailData, clearDetailData, InsertClick, UpdateClick, setPrintAction, setSaveClick } = authSlice.actions;
 
 export default authSlice.reducer;

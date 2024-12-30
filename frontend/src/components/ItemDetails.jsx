@@ -9,7 +9,8 @@ function ItemDetails() {
   // Accessing Redux states
   const data = useSelector((state) => state.auth.detailData) || [];
   const message = useSelector((state) => state.auth.message) || false;
-
+  const printAction = useSelector((state) => state.auth.printAction);
+  
   // Local state for new item
   const [newItem, setNewItem] = useState({
     item_code: '',
@@ -42,6 +43,7 @@ function ItemDetails() {
         !newItem.sr_no ||
         !newItem.amount
       ) {
+        console.log(newItem)
         alert('Please fill all the fields');
         dispatch(UpdateClick()); // Reset `message` state
         return;
@@ -70,7 +72,7 @@ function ItemDetails() {
   }, [message, data, newItem, dispatch]);
 
   return (
-    <div className="table-container">
+    <div className="table-container" style={printAction ? {visibility: 'hidden'} : {}}>
       <table className="details-table">
         <thead>
           <tr>
@@ -86,7 +88,7 @@ function ItemDetails() {
           {data?.length > 0 ? (
             data.map((item, index) => (
               <tr key={index}>
-                <td>{index + 1}</td>
+                <td>{item.sr_no}</td> 
                 <td>{item.item_code}</td>
                 <td>{item.item_name}</td>
                 <td>{item.qty}</td>
@@ -150,7 +152,7 @@ function ItemDetails() {
               <input
                 type="number"
                 name="amount"
-                value={newItem.qty && newItem.rate ? newItem.qty * newItem.rate : ''}
+                value={newItem.amount}
                 onChange={handleInputChange}
                 
               /> 
